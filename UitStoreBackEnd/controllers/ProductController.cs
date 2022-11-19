@@ -1,68 +1,56 @@
 using Microsoft.AspNetCore.Mvc;
+using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
 using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.Controllers;
 
-public interface IProductController
+public interface IProductController : IBaseController<Guid, Product, ProductFilter>
 {
-    Task<IActionResult> create(Product product);
-
-    Task<IActionResult> getDetailById(Guid id);
-
-    Task<IActionResult> update(Product product);
-
-    Task<IActionResult> delete(Guid id);
-
-    Task<IActionResult> getList();
-
-    Task<IActionResult> getPage(ProductFilter productFilter);
 }
 
 [Route("/api/v1/product")]
-public class ProductController : Controller, IProductController
+public class ProductController : BaseController<Guid, Product, ProductFilter>, IProductController
 {
-    private readonly IProductFactory iProductFactory;
-
-    public ProductController(IProductFactory iProductFactory)
+    public ProductController(IProductFactory baseFactory, IResponseFactory responseFactory) : base(baseFactory,
+        responseFactory)
     {
-        this.iProductFactory = iProductFactory;
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> create([FromBody] Product product)
+    public Task<IActionResult> create([FromBody] Product DT)
     {
-        return Ok(await iProductFactory.create(product));
+        return base.create(DT);
     }
 
-    [HttpGet("{id}/detail")]
-    public async Task<IActionResult> getDetailById(Guid id)
+    [HttpDelete("{ID}/delete")]
+    public Task<IActionResult> deleteById(Guid ID)
     {
-        return Ok(await iProductFactory.getDetail(id));
+        return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public async Task<IActionResult> update([FromBody] Product product)
+    public Task<IActionResult> update([FromBody] Product DT)
     {
-        return Ok(await iProductFactory.update(product));
+        return base.update(DT);
     }
 
-    [HttpDelete("{id}/delete")]
-    public async Task<IActionResult> delete(Guid id)
+    [HttpGet("{ID}/detail")]
+    public Task<IActionResult> getDetailById(Guid ID)
     {
-        return Ok(await iProductFactory.deleteById(id));
+        return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public async Task<IActionResult> getList()
+    public Task<IActionResult> getList()
     {
-        return Ok(await iProductFactory.getList());
+        return base.getList();
     }
 
     [HttpPost("page")]
-    public async Task<IActionResult> getPage([FromBody] ProductFilter productFilter)
+    public Task<IActionResult> getPage([FromBody] ProductFilter Filter)
     {
-        return Ok(await iProductFactory.getPage(productFilter));
+        return base.getPage(Filter);
     }
 }

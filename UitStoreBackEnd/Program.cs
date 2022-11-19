@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.factory;
 
@@ -15,6 +16,7 @@ var connection =
     "Server=tcp:backenduit.database.windows.net,1433;Initial Catalog=backendmobile;Persist Security Info=False;User ID=CloudSA977394e2;Password=Vanthien@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 builder.Services.AddDbContext<dbcontext>(option => option.UseSqlServer(connection));
 
+builder.Services.AddScoped(typeof(IResponseFactory), typeof(ResponseFactory));
 builder.Services.AddScoped(typeof(ICommentFactory), typeof(CommentFactory));
 builder.Services.AddScoped(typeof(IDetailOrderFactory), typeof(DetailOrderFactory));
 builder.Services.AddScoped(typeof(IFavorite_ProductFactory), typeof(Favorite_ProductFactory));

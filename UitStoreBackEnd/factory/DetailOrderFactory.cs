@@ -1,23 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.factory;
 
-public interface IDetailOrderFactory
+public interface IDetailOrderFactory : IBaseFactory<Guid, DetailOrder, DetailOrderFilter>
 {
-    Task<DetailOrder> create(DetailOrder DetailOrder);
-
-    Task<bool> deleteById(Guid id);
-
-    Task<DetailOrder> update(DetailOrder DetailOrder);
-
-    Task<DetailOrder> getDetail(Guid id);
-
-    List<DetailOrder> getList();
-
-    Task<List<DetailOrder>> getPage(DetailOrderFilter detailOrderFilter);
 }
 
 public class DetailOrderFactory : IDetailOrderFactory
@@ -59,14 +49,14 @@ public class DetailOrderFactory : IDetailOrderFactory
         return detailOrder;
     }
 
-    public async Task<DetailOrder> getDetail(Guid id)
+    public async Task<DetailOrder> getDetailById(Guid ID)
     {
-        return await _dbcontext.DetailOrders.FindAsync(id) ?? throw new InvalidOperationException();
+        return await _dbcontext.DetailOrders.FindAsync(ID) ?? throw new InvalidOperationException();
     }
 
-    public List<DetailOrder> getList()
+    public async Task<List<DetailOrder>> getList()
     {
-        return _dbcontext.DetailOrders.ToList();
+        return await _dbcontext.DetailOrders.ToListAsync();
     }
 
     public async Task<List<DetailOrder>> getPage(DetailOrderFilter detailOrderFilter)
@@ -83,5 +73,10 @@ public class DetailOrderFactory : IDetailOrderFactory
                   item.quantity == detailOrderFilter.quantity
             select item;
         return await result.ToListAsync();
+    }
+
+    public async Task<DetailOrder> getDetail(Guid id)
+    {
+        return await _dbcontext.DetailOrders.FindAsync(id) ?? throw new InvalidOperationException();
     }
 }

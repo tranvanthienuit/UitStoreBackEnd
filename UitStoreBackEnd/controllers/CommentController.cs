@@ -1,68 +1,56 @@
 using Microsoft.AspNetCore.Mvc;
+using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
 using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.Controllers;
 
-public interface ICommentController
+public interface ICommentController : IBaseController<Guid, Comment, CommentFilter>
 {
-    Task<IActionResult> create(Comment comment);
-
-    Task<IActionResult> getDetailById(Guid id);
-
-    Task<IActionResult> update(Comment comment);
-
-    Task<IActionResult> delete(Guid id);
-
-    Task<IActionResult> getList();
-
-    Task<IActionResult> getPage(CommentFilter commentFilter);
 }
 
 [Route("/api/v1/comment")]
-public class CommentController : Controller, ICommentController
+public class CommentController : BaseController<Guid, Comment, CommentFilter>, ICommentController
 {
-    private readonly ICommentFactory iCommentFactory;
-
-    public CommentController(ICommentFactory iCommentFactory)
+    public CommentController(ICommentFactory baseFactory, IResponseFactory responseFactory) : base(baseFactory,
+        responseFactory)
     {
-        this.iCommentFactory = iCommentFactory;
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> create([FromBody] Comment comment)
+    public Task<IActionResult> create([FromBody] Comment DT)
     {
-        return Ok(await iCommentFactory.create(comment));
+        return base.create(DT);
     }
 
-    [HttpGet("{id}/detail")]
-    public async Task<IActionResult> getDetailById(Guid id)
+    [HttpDelete("{ID}/delete")]
+    public Task<IActionResult> deleteById(Guid ID)
     {
-        return Ok(await iCommentFactory.getDetail(id));
+        return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public async Task<IActionResult> update([FromBody] Comment comment)
+    public Task<IActionResult> update([FromBody] Comment DT)
     {
-        return Ok(await iCommentFactory.update(comment));
+        return base.update(DT);
     }
 
-    [HttpDelete("{id}/delete")]
-    public async Task<IActionResult> delete(Guid id)
+    [HttpGet("{ID}/detail")]
+    public Task<IActionResult> getDetailById(Guid ID)
     {
-        return Ok(await iCommentFactory.deleteById(id));
+        return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public async Task<IActionResult> getList()
+    public Task<IActionResult> getList()
     {
-        return Ok(await iCommentFactory.getList());
+        return base.getList();
     }
 
     [HttpPost("page")]
-    public async Task<IActionResult> getPage([FromBody] CommentFilter commentFilter)
+    public Task<IActionResult> getPage([FromBody] CommentFilter Filter)
     {
-        return Ok(await iCommentFactory.getPage(commentFilter));
+        return base.getPage(Filter);
     }
 }

@@ -1,23 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.factory;
 
-public interface IFavorite_ProductFactory
+public interface IFavorite_ProductFactory : IBaseFactory<Guid, Favorite_Product, FavoriteProductFilter>
 {
-    Task<Favorite_Product> create(Favorite_Product Favorite_Product);
-
-    Task<bool> deleteById(Guid id);
-
-    Task<Favorite_Product> update(Favorite_Product Favorite_Product);
-
-    Task<Favorite_Product> getDetail(Guid id);
-
-    Task<List<Favorite_Product>> getList();
-
-    Task<List<Favorite_Product>> getPage(FavoriteProductFilter filter);
 }
 
 public class Favorite_ProductFactory : IFavorite_ProductFactory
@@ -40,7 +30,7 @@ public class Favorite_ProductFactory : IFavorite_ProductFactory
     {
         try
         {
-            var Favorite_Product = getDetail(id).Result;
+            var Favorite_Product = getDetailById(id).Result;
             _dbcontext.FavoriteProducts.Remove(Favorite_Product);
             await _dbcontext.SaveChangesAsync();
             return true;
@@ -59,9 +49,9 @@ public class Favorite_ProductFactory : IFavorite_ProductFactory
         return favoriteProduct;
     }
 
-    public async Task<Favorite_Product> getDetail(Guid id)
+    public async Task<Favorite_Product> getDetailById(Guid ID)
     {
-        return await _dbcontext.FavoriteProducts.FindAsync(id) ?? throw new InvalidOperationException();
+        return await _dbcontext.FavoriteProducts.FindAsync(ID) ?? throw new InvalidOperationException();
     }
 
     public async Task<List<Favorite_Product>> getList()

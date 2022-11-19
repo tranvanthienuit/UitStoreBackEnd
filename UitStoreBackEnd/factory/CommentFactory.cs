@@ -1,23 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.factory;
 
-public interface ICommentFactory
+public interface ICommentFactory : IBaseFactory<Guid, Comment, CommentFilter>
 {
-    Task<Comment> create(Comment Comment);
-
-    Task<bool> deleteById(Guid id);
-
-    Task<Comment> update(Comment Comment);
-
-    Task<Comment> getDetail(Guid id);
-
-    Task<List<Comment>> getList();
-
-    Task<List<Comment>> getPage(CommentFilter commentFilter);
 }
 
 public class CommentFactory : ICommentFactory
@@ -34,7 +24,7 @@ public class CommentFactory : ICommentFactory
 
     public async Task<Comment> create(Comment Comment)
     {
-        var product = await _productFactory.getDetail(Comment.productId);
+        var product = await _productFactory.getDetailById(Comment.productId);
         product.rating = (product.rating + Comment.rating) / 2;
         await _productFactory.update(product);
         var result = await _dbcontext.Comments.AddAsync(Comment);
@@ -46,7 +36,7 @@ public class CommentFactory : ICommentFactory
     {
         try
         {
-            var Comment = getDetail(id).Result;
+            var Comment = getDetailById(id).Result;
             _dbcontext.Comments.Remove(Comment);
             await _dbcontext.SaveChangesAsync();
             return true;
@@ -65,9 +55,9 @@ public class CommentFactory : ICommentFactory
         return newComment;
     }
 
-    public async Task<Comment> getDetail(Guid id)
+    public async Task<Comment> getDetailById(Guid ID)
     {
-        return await _dbcontext.Comments.FindAsync(id) ?? throw new InvalidOperationException();
+        return await _dbcontext.Comments.FindAsync(ID) ?? throw new InvalidOperationException();
     }
 
     public async Task<List<Comment>> getList()

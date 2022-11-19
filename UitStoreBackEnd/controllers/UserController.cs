@@ -1,67 +1,75 @@
 using Microsoft.AspNetCore.Mvc;
+using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
+using UitStoreBackEnd.filter;
+using UitStoreBackEnd.model.login;
 
 namespace UitStoreBackEnd.Controllers;
 
-public interface IUserController
+public interface IUserController : IBaseController<Guid, User, UserFilter>
 {
-    Task<IActionResult> create(User user);
-
-    Task<IActionResult> getDetailById(Guid id);
-
-    Task<IActionResult> update(User user);
-
-    Task<IActionResult> delete(Guid id);
-
-    Task<IActionResult> getList();
-
     Task<IActionResult> changePassword(Guid id, string password);
+
+    Task<IActionResult> login(LoginRequest loginRequest);
 }
 
 [Route("/api/v1/user")]
-public class UserController : Controller, IUserController
+public class UserController : BaseController<Guid, User, UserFilter>, IUserController
 {
-    private readonly IUserFactory iUserFactory;
+    private readonly IUserFactory _userFactory;
 
-    public UserController(IUserFactory iUserFactory)
+    public UserController(IUserFactory baseFactory, IResponseFactory responseFactory) : base(baseFactory,
+        responseFactory)
     {
-        this.iUserFactory = iUserFactory;
+        _userFactory = baseFactory;
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> create([FromBody] User user)
+    public Task<IActionResult> create([FromBody] User DT)
     {
-        return Ok(await iUserFactory.create(user));
+        return base.create(DT);
     }
 
-    [HttpGet("{id}/detail")]
-    public async Task<IActionResult> getDetailById(Guid id)
+    [HttpDelete("{ID}/delete")]
+    public Task<IActionResult> deleteById(Guid ID)
     {
-        return Ok(await iUserFactory.getDetail(id));
+        return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public async Task<IActionResult> update([FromBody] User user)
+    public Task<IActionResult> update([FromBody] User DT)
     {
-        return Ok(await iUserFactory.update(user));
+        return base.update(DT);
     }
 
-    [HttpDelete("{id}/delete")]
-    public async Task<IActionResult> delete(Guid id)
+    [HttpGet("{ID}/detail")]
+    public Task<IActionResult> getDetailById(Guid ID)
     {
-        return Ok(await iUserFactory.deleteById(id));
+        return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public async Task<IActionResult> getList()
+    public Task<IActionResult> getList()
     {
-        return Ok(iUserFactory.getList());
+        return base.getList();
+    }
+
+    [HttpPost("page")]
+    public Task<IActionResult> getPage([FromBody] UserFilter Filter)
+    {
+        return base.getPage(Filter);
     }
 
     [HttpPost("{id}/change-password")]
     public async Task<IActionResult> changePassword(Guid id, [FromBody] string password)
     {
-        return Ok(await iUserFactory.changePassword(id, password));
+        return Ok(_responseFactory.successModel(await _userFactory.changePassword(id, password)));
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> login([FromBody] LoginRequest loginRequest)
+    {
+        return Ok(_responseFactory.successModel(await _userFactory.login(loginRequest)));
     }
 }

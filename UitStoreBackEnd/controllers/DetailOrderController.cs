@@ -1,68 +1,56 @@
 using Microsoft.AspNetCore.Mvc;
+using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
 using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.Controllers;
 
-public interface IDetailOrderController
+public interface IDetailOrderController : IBaseController<Guid, DetailOrder, DetailOrderFilter>
 {
-    Task<IActionResult> create(DetailOrder detailOrder);
-
-    Task<IActionResult> getDetailById(Guid id);
-
-    Task<IActionResult> update(DetailOrder detailOrder);
-
-    Task<IActionResult> delete(Guid id);
-
-    Task<IActionResult> getList();
-
-    Task<IActionResult> getPage(DetailOrderFilter detailOrderFilter);
 }
 
 [Route("/api/v1/detail-order")]
-public class DetailOrderController : Controller, IDetailOrderController
+public class DetailOrderController : BaseController<Guid, DetailOrder, DetailOrderFilter>
 {
-    private readonly IDetailOrderFactory iDetailOrderFactory;
-
-    public DetailOrderController(IDetailOrderFactory iDetailOrderFactory)
+    public DetailOrderController(IDetailOrderFactory baseFactory, IResponseFactory responseFactory) : base(baseFactory,
+        responseFactory)
     {
-        this.iDetailOrderFactory = iDetailOrderFactory;
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> create([FromBody] DetailOrder detailOrder)
+    public Task<IActionResult> create([FromBody] DetailOrder DT)
     {
-        return Ok(await iDetailOrderFactory.create(detailOrder));
+        return base.create(DT);
     }
 
-    [HttpGet("{id}/detail")]
-    public async Task<IActionResult> getDetailById(Guid id)
+    [HttpDelete("{ID}/delete")]
+    public Task<IActionResult> deleteById(Guid ID)
     {
-        return Ok(await iDetailOrderFactory.getDetail(id));
+        return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public async Task<IActionResult> update([FromBody] DetailOrder detailOrder)
+    public Task<IActionResult> update([FromBody] DetailOrder DT)
     {
-        return Ok(await iDetailOrderFactory.update(detailOrder));
+        return base.update(DT);
     }
 
-    [HttpDelete("{id}/delete")]
-    public async Task<IActionResult> delete(Guid id)
+    [HttpGet("{ID}/detail")]
+    public Task<IActionResult> getDetailById(Guid ID)
     {
-        return Ok(await iDetailOrderFactory.deleteById(id));
+        return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public async Task<IActionResult> getList()
+    public Task<IActionResult> getList()
     {
-        return Ok(iDetailOrderFactory.getList());
+        return base.getList();
     }
 
     [HttpPost("page")]
-    public async Task<IActionResult> getPage([FromBody] DetailOrderFilter detailOrderFilter)
+    public Task<IActionResult> getPage([FromBody] DetailOrderFilter Filter)
     {
-        return Ok(await iDetailOrderFactory.getPage(detailOrderFilter));
+        return base.getPage(Filter);
     }
 }

@@ -1,37 +1,34 @@
 using Microsoft.EntityFrameworkCore;
+using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
+using UitStoreBackEnd.filter;
+using UitStoreBackEnd.model.login;
 
 namespace UitStoreBackEnd.factory;
 
-public interface IUserFactory
+public interface IUserFactory : IBaseFactory<Guid, User, UserFilter>
 {
-    Task<User> create(User user);
-
-    Task<bool> deleteById(Guid id);
-
-    Task<User> update(User user);
-
-    Task<User> getDetail(Guid id);
-
-    Task<List<User>> getList();
-
     Task<User> changePassword(Guid id, string password);
+
+    Task<User> login(LoginRequest loginRequest);
 }
 
 public class UserFactory : IUserFactory
 {
     private readonly dbcontext _dbcontext;
+    private readonly IResponseFactory _responseFactory;
 
-    public UserFactory(dbcontext dbcontext)
+    public UserFactory(dbcontext dbcontext, IResponseFactory responseFactory)
     {
         _dbcontext = dbcontext;
+        _responseFactory = responseFactory;
     }
 
     public async Task<User> create(User user)
     {
         var resultCheck = existUser(user.username, user.telephone, user.email).Result;
-        if (resultCheck) return new User();
+        if (resultCheck) return await Task.FromResult<User>(null);
 
         var result = await _dbcontext.Users.AddAsync(user);
         await _dbcontext.SaveChangesAsync();
@@ -42,7 +39,7 @@ public class UserFactory : IUserFactory
     {
         try
         {
-            var user = getDetail(id).Result;
+            var user = getDetailById(id).Result;
             _dbcontext.Users.Remove(user);
             await _dbcontext.SaveChangesAsync();
             return true;
@@ -61,14 +58,19 @@ public class UserFactory : IUserFactory
         return newuser;
     }
 
-    public async Task<User> getDetail(Guid id)
+    public async Task<User> getDetailById(Guid ID)
     {
-        return await _dbcontext.Users.FindAsync(id) ?? throw new InvalidOperationException();
+        return await _dbcontext.Users.FindAsync(ID) ?? throw new InvalidOperationException();
     }
 
     public async Task<List<User>> getList()
     {
         return await _dbcontext.Users.ToListAsync();
+    }
+
+    public Task<List<User>> getPage(UserFilter Filter)
+    {
+        return null!;
     }
 
     public async Task<User> changePassword(Guid id, string password)
@@ -80,6 +82,16 @@ public class UserFactory : IUserFactory
         var newuser = _dbcontext.Users.Update(user).Entity;
         await _dbcontext.SaveChangesAsync();
         return newuser;
+    }
+
+    public async Task<User> login(LoginRequest loginRequest)
+    {
+        var user = _dbcontext
+            .Users
+            .Where(item => item.username == loginRequest.username
+                           && item.password == loginRequest.password);
+        if (!user.Any()) return await Task.FromResult<User>(null);
+        return user.First();
     }
 
     public async Task<bool> existUser(string username, string telephone, string email)

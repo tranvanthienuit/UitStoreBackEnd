@@ -1,23 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.factory;
 
-public interface IProductFactory
+public interface IProductFactory : IBaseFactory<Guid, Product, ProductFilter>
 {
-    Task<Product> create(Product Product);
-
-    Task<bool> deleteById(Guid id);
-
-    Task<Product> update(Product Product);
-
-    Task<Product> getDetail(Guid id);
-
-    Task<List<Product>> getList();
-
-    Task<List<Product>> getPage(ProductFilter productFilter);
 }
 
 public class ProductFactory : IProductFactory
@@ -40,7 +30,7 @@ public class ProductFactory : IProductFactory
     {
         try
         {
-            var Product = getDetail(id).Result;
+            var Product = getDetailById(id).Result;
             _dbcontext.Products.Remove(Product);
             await _dbcontext.SaveChangesAsync();
             return true;
@@ -59,9 +49,9 @@ public class ProductFactory : IProductFactory
         return product;
     }
 
-    public async Task<Product> getDetail(Guid id)
+    public async Task<Product> getDetailById(Guid ID)
     {
-        return await _dbcontext.Products.FindAsync(id) ?? throw new InvalidOperationException();
+        return await _dbcontext.Products.FindAsync(ID) ?? throw new InvalidOperationException();
     }
 
     public async Task<List<Product>> getList()
