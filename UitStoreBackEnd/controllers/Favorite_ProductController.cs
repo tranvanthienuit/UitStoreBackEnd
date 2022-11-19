@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
+using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.Controllers;
 
@@ -15,6 +16,7 @@ public interface IFavorite_ProductController
     Task<IActionResult> delete(Guid id);
 
     Task<IActionResult> getList();
+    Task<IActionResult> getPage(FavoriteProductFilter filter);
 }
 
 [Route("/api/v1/favorite-product")]
@@ -54,6 +56,12 @@ public class Favorite_ProductController : Controller, IFavorite_ProductControlle
     [HttpGet("list")]
     public async Task<IActionResult> getList()
     {
-        return Ok(iFavorite_ProductFactory.getList());
+        return Ok(await iFavorite_ProductFactory.getList());
+    }
+
+    [HttpPost("page")]
+    public async Task<IActionResult> getPage([FromBody] FavoriteProductFilter filter)
+    {
+        return Ok(await iFavorite_ProductFactory.getPage(filter));
     }
 }

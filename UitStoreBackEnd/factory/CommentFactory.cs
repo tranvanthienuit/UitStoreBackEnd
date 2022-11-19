@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
+using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.factory;
 
@@ -13,7 +15,9 @@ public interface ICommentFactory
 
     Task<Comment> getDetail(Guid id);
 
-    List<Comment> getList();
+    Task<List<Comment>> getList();
+
+    Task<List<Comment>> getPage(CommentFilter commentFilter);
 }
 
 public class CommentFactory : ICommentFactory
@@ -60,8 +64,18 @@ public class CommentFactory : ICommentFactory
         return await _dbcontext.Comments.FindAsync(id) ?? throw new InvalidOperationException();
     }
 
-    public List<Comment> getList()
+    public async Task<List<Comment>> getList()
     {
-        return _dbcontext.Comments.ToList();
+        return await _dbcontext.Comments.ToListAsync();
+    }
+
+    public async Task<List<Comment>> getPage(CommentFilter commentFilter)
+    {
+        var result = from item in _dbcontext.Comments
+            where commentFilter.userId == null || (item.userId == new Guid(commentFilter.userId)
+                                                   && commentFilter.productId == null) ||
+                  item.productId == new Guid(commentFilter.productId)
+            select item;
+        return await result.ToListAsync();
     }
 }

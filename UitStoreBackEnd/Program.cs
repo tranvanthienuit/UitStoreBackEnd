@@ -18,10 +18,9 @@ builder.Services.AddDbContext<dbcontext>(option => option.UseSqlServer(connectio
 builder.Services.AddScoped(typeof(ICommentFactory), typeof(CommentFactory));
 builder.Services.AddScoped(typeof(IDetailOrderFactory), typeof(DetailOrderFactory));
 builder.Services.AddScoped(typeof(IFavorite_ProductFactory), typeof(Favorite_ProductFactory));
+builder.Services.AddScoped(typeof(IOrderFactory), typeof(OrderFactory));
 builder.Services.AddScoped(typeof(IProductFactory), typeof(ProductFactory));
 builder.Services.AddScoped(typeof(IUserFactory), typeof(UserFactory));
-builder.Services.AddScoped(typeof(IDetailOrderFactory), typeof(DetailOrderFactory));
-builder.Services.AddScoped(typeof(IVoucherFactory), typeof(VoucherFactory));
 
 var app = builder.Build();
 app.UseHttpsRedirection();

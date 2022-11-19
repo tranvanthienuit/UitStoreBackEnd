@@ -58,6 +58,10 @@
               "target": "Package",
               "version": "[6.0.10, )"
             },
+            "Sane.Http.HttpResponseExceptions": {
+              "target": "Package",
+              "version": "[1.1.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"

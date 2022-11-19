@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
+using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.factory;
 
@@ -13,7 +15,9 @@ public interface IFavorite_ProductFactory
 
     Task<Favorite_Product> getDetail(Guid id);
 
-    List<Favorite_Product> getList();
+    Task<List<Favorite_Product>> getList();
+
+    Task<List<Favorite_Product>> getPage(FavoriteProductFilter filter);
 }
 
 public class Favorite_ProductFactory : IFavorite_ProductFactory
@@ -60,8 +64,16 @@ public class Favorite_ProductFactory : IFavorite_ProductFactory
         return await _dbcontext.FavoriteProducts.FindAsync(id) ?? throw new InvalidOperationException();
     }
 
-    public List<Favorite_Product> getList()
+    public async Task<List<Favorite_Product>> getList()
     {
-        return _dbcontext.FavoriteProducts.ToList();
+        return await _dbcontext.FavoriteProducts.ToListAsync();
+    }
+
+    public async Task<List<Favorite_Product>> getPage(FavoriteProductFilter filter)
+    {
+        var result = from item in _dbcontext.FavoriteProducts
+            where filter.userId == null || item.userId == new Guid(filter.userId)
+            select item;
+        return await result.ToListAsync();
     }
 }

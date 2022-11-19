@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
+using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.Controllers;
 
@@ -15,6 +16,8 @@ public interface ICommentController
     Task<IActionResult> delete(Guid id);
 
     Task<IActionResult> getList();
+
+    Task<IActionResult> getPage(CommentFilter commentFilter);
 }
 
 [Route("/api/v1/comment")]
@@ -54,6 +57,11 @@ public class CommentController : Controller, ICommentController
     [HttpGet("list")]
     public async Task<IActionResult> getList()
     {
-        return Ok(iCommentFactory.getList());
+        return Ok(await iCommentFactory.getList());
+    }
+
+    public async Task<IActionResult> getPage(CommentFilter commentFilter)
+    {
+        return Ok(await iCommentFactory.getPage(commentFilter));
     }
 }

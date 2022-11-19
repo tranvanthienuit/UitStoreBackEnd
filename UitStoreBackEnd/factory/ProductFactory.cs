@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
+using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.factory;
 
@@ -13,7 +15,9 @@ public interface IProductFactory
 
     Task<Product> getDetail(Guid id);
 
-    List<Product> getList();
+    Task<List<Product>> getList();
+
+    Task<List<Product>> getPage(ProductFilter productFilter);
 }
 
 public class ProductFactory : IProductFactory
@@ -60,8 +64,20 @@ public class ProductFactory : IProductFactory
         return await _dbcontext.Products.FindAsync(id) ?? throw new InvalidOperationException();
     }
 
-    public List<Product> getList()
+    public async Task<List<Product>> getList()
     {
-        return _dbcontext.Products.ToList();
+        return await _dbcontext.Products.ToListAsync();
+    }
+
+    public async Task<List<Product>> getPage(ProductFilter productFilter)
+    {
+        var result = from item in _dbcontext.Products
+            where productFilter.name == null || (item.name == productFilter.name
+                                                 && productFilter.price == null) || (item.price == productFilter.price
+                && productFilter.size == null) || (item.size == productFilter.size
+                                                   && productFilter.stock == null) || (item.stock == productFilter.stock
+                && productFilter.salePrice == null) || item.salePrice == productFilter.salePrice
+            select item;
+        return await result.ToListAsync();
     }
 }

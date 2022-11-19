@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
+using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.Controllers;
 
@@ -15,6 +16,8 @@ public interface IOrderController
     Task<IActionResult> delete(Guid id);
 
     Task<IActionResult> getList();
+
+    Task<IActionResult> getPage(OrderFilter orderFilter);
 }
 
 [Route("/api/v1/order")]
@@ -51,9 +54,14 @@ public class OrderController : Controller, IOrderController
         return Ok(await iOrderFactory.deleteById(id));
     }
 
-    [HttpGet("list")]
     public async Task<IActionResult> getList()
     {
-        return Ok(iOrderFactory.getList());
+        return Ok(await iOrderFactory.getList());
+    }
+
+    [HttpPost("page")]
+    public async Task<IActionResult> getPage([FromBody] OrderFilter orderFilterd)
+    {
+        return Ok(await iOrderFactory.getPage(orderFilterd));
     }
 }

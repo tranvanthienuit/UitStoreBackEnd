@@ -15,6 +15,8 @@ public interface IUserController
     Task<IActionResult> delete(Guid id);
 
     Task<IActionResult> getList();
+
+    Task<IActionResult> changePassword(Guid id, string password);
 }
 
 [Route("/api/v1/user")]
@@ -55,5 +57,11 @@ public class UserController : Controller, IUserController
     public async Task<IActionResult> getList()
     {
         return Ok(iUserFactory.getList());
+    }
+
+    [HttpPost("{id}/change-password")]
+    public async Task<IActionResult> changePassword(Guid id, [FromBody] string password)
+    {
+        return Ok(await iUserFactory.changePassword(id, password));
     }
 }

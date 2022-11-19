@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
+using UitStoreBackEnd.filter;
 
 namespace UitStoreBackEnd.Controllers;
 
@@ -15,6 +16,8 @@ public interface IProductController
     Task<IActionResult> delete(Guid id);
 
     Task<IActionResult> getList();
+
+    Task<IActionResult> getPage(ProductFilter productFilter);
 }
 
 [Route("/api/v1/product")]
@@ -54,6 +57,11 @@ public class ProductController : Controller, IProductController
     [HttpGet("list")]
     public async Task<IActionResult> getList()
     {
-        return Ok(iProductFactory.getList());
+        return Ok(await iProductFactory.getList());
+    }
+
+    public async Task<IActionResult> getPage(ProductFilter productFilter)
+    {
+        return Ok(await iProductFactory.getPage(productFilter));
     }
 }
