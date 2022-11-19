@@ -60,7 +60,8 @@ public class CommentController : Controller, ICommentController
         return Ok(await iCommentFactory.getList());
     }
 
-    public async Task<IActionResult> getPage(CommentFilter commentFilter)
+    [HttpPost("page")]
+    public async Task<IActionResult> getPage([FromBody] CommentFilter commentFilter)
     {
         return Ok(await iCommentFactory.getPage(commentFilter));
     }

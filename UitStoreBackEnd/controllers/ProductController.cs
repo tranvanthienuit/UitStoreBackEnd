@@ -60,7 +60,8 @@ public class ProductController : Controller, IProductController
         return Ok(await iProductFactory.getList());
     }
 
-    public async Task<IActionResult> getPage(ProductFilter productFilter)
+    [HttpPost("page")]
+    public async Task<IActionResult> getPage([FromBody] ProductFilter productFilter)
     {
         return Ok(await iProductFactory.getPage(productFilter));
     }

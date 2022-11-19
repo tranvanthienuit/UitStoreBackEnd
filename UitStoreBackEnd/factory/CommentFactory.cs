@@ -24,13 +24,19 @@ public class CommentFactory : ICommentFactory
 {
     private readonly dbcontext _dbcontext;
 
-    public CommentFactory(dbcontext dbcontext)
+    private readonly IProductFactory _productFactory;
+
+    public CommentFactory(dbcontext dbcontext, IProductFactory productFactory)
     {
         _dbcontext = dbcontext;
+        _productFactory = productFactory;
     }
 
     public async Task<Comment> create(Comment Comment)
     {
+        var product = await _productFactory.getDetail(Comment.productId);
+        product.rating = (product.rating + Comment.rating) / 2;
+        await _productFactory.update(product);
         var result = await _dbcontext.Comments.AddAsync(Comment);
         await _dbcontext.SaveChangesAsync();
         return result.Entity;

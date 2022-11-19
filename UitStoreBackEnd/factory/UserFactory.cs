@@ -1,6 +1,4 @@
-using System.Net;
 using Microsoft.EntityFrameworkCore;
-using Sane.Http.HttpResponseExceptions;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
 
@@ -16,7 +14,7 @@ public interface IUserFactory
 
     Task<User> getDetail(Guid id);
 
-    List<User> getList();
+    Task<List<User>> getList();
 
     Task<User> changePassword(Guid id, string password);
 }
@@ -32,15 +30,8 @@ public class UserFactory : IUserFactory
 
     public async Task<User> create(User user)
     {
-        if (existUser(user.username, user.telephone, user.email).Result)
-        {
-            var message = new HttpResponseMessage
-            {
-                Content = new StringContent("user exist")
-            };
-
-            throw new HttpResponseException(HttpStatusCode.Conflict, message);
-        }
+        var resultCheck = existUser(user.username, user.telephone, user.email).Result;
+        if (resultCheck) return new User();
 
         var result = await _dbcontext.Users.AddAsync(user);
         await _dbcontext.SaveChangesAsync();
@@ -75,22 +66,15 @@ public class UserFactory : IUserFactory
         return await _dbcontext.Users.FindAsync(id) ?? throw new InvalidOperationException();
     }
 
-    public List<User> getList()
+    public async Task<List<User>> getList()
     {
-        return _dbcontext.Users.ToList();
+        return await _dbcontext.Users.ToListAsync();
     }
 
     public async Task<User> changePassword(Guid id, string password)
     {
         var user = await _dbcontext.Users.FindAsync(id);
-        if (user == null)
-        {
-            var message = new HttpResponseMessage
-            {
-                Content = new StringContent("user not found")
-            };
-            throw new HttpResponseException(HttpStatusCode.NotFound, message);
-        }
+        if (user == null) return null;
 
         user.password = password;
         var newuser = _dbcontext.Users.Update(user).Entity;
@@ -100,13 +84,13 @@ public class UserFactory : IUserFactory
 
     public async Task<bool> existUser(string username, string telephone, string email)
     {
-        var users = await _dbcontext
+        var users = _dbcontext
             .Users
             .Where(
                 item =>
                     item.username.Equals(username) ||
                     item.telephone.Equals(telephone) ||
-                    item.email.Equals(email)).ToListAsync();
-        return users.Count != 0;
+                    item.email.Equals(email)).ToListAsync().Result.First();
+        return users.username == null ? false : true;
     }
 }

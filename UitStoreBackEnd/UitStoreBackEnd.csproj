@@ -21,4 +21,12 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="model\comment"/>
+        <Folder Include="model\detail_order"/>
+        <Folder Include="model\favorite_product"/>
+        <Folder Include="model\order"/>
+        <Folder Include="model\user"/>
+    </ItemGroup>
+
 </Project>

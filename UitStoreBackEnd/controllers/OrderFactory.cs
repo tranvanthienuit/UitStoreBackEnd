@@ -54,6 +54,7 @@ public class OrderController : Controller, IOrderController
         return Ok(await iOrderFactory.deleteById(id));
     }
 
+    [HttpGet("list")]
     public async Task<IActionResult> getList()
     {
         return Ok(await iOrderFactory.getList());
