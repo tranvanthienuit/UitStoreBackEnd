@@ -12,5 +12,5 @@ public interface IBaseFactory<I, DT, F>
 
     Task<List<DT>> getList();
 
-    Task<List<DT>> getPage(F Filter);
+    Task<List<DT>> getPage(F Filter, string sort, int page, int size);
 }

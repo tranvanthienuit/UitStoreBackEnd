@@ -1,4 +1,3 @@
-using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.base_factory.response;
@@ -57,10 +56,11 @@ public class UserController : BaseController<Guid, User, UserFilter>, IUserContr
         return base.getList();
     }
 
-    [HttpPost("page")]
-    public Task<BaseResponse<List<User>>> getPage([FromBody] UserFilter Filter)
+    [HttpPost("{sort}/{page}/{size}/page")]
+    public Task<BaseResponse<List<User>>> getPage([FromQuery] UserFilter Filter, string sort = "ASC", int page = 0,
+        int size = 10)
     {
-        return base.getPage(Filter);
+        return base.getPage(Filter, sort, page, size);
     }
 
     [HttpPost("{id}/change-password")]

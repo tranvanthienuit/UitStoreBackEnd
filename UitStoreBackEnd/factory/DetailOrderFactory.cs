@@ -59,7 +59,7 @@ public class DetailOrderFactory : IDetailOrderFactory
         return await _dbcontext.DetailOrders.ToListAsync();
     }
 
-    public async Task<List<DetailOrder>> getPage(DetailOrderFilter detailOrderFilter)
+    public async Task<List<DetailOrder>> getPage(DetailOrderFilter detailOrderFilter, string sort, int page, int size)
     {
         var result = from item in _dbcontext.DetailOrders
             where detailOrderFilter.productId == null || (item.productId == detailOrderFilter.productId
@@ -72,7 +72,11 @@ public class DetailOrderFactory : IDetailOrderFactory
                                                           && detailOrderFilter.quantity == null) ||
                   item.quantity == detailOrderFilter.quantity
             select item;
-        return await result.ToListAsync();
+        if (sort.Equals("ASC"))
+            return await result.OrderBy(x => x.Equals(detailOrderFilter)).Skip((page - 1) * size).Take(size)
+                .ToListAsync();
+        return await result.OrderByDescending(x => x.Equals(detailOrderFilter)).Skip((page - 1) * size).Take(size)
+            .ToListAsync();
     }
 
     public async Task<DetailOrder> getDetail(Guid id)

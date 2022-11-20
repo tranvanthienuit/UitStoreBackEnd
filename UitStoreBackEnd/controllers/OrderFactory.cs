@@ -49,9 +49,10 @@ public class OrderController : BaseController<Guid, Order, OrderFilter>, IOrderC
         return base.getList();
     }
 
-    [HttpPost("page")]
-    public Task<BaseResponse<List<Order>>> getPage([FromBody] OrderFilter Filter)
+    [HttpPost("{sort}/{page}/{size}/page")]
+    public Task<BaseResponse<List<Order>>> getPage([FromQuery] OrderFilter Filter, string sort = "ASC", int page = 0,
+        int size = 10)
     {
-        return base.getPage(Filter);
+        return base.getPage(Filter, sort, page, size);
     }
 }

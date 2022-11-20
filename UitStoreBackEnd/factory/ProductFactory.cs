@@ -59,7 +59,7 @@ public class ProductFactory : IProductFactory
         return await _dbcontext.Products.ToListAsync();
     }
 
-    public async Task<List<Product>> getPage(ProductFilter productFilter)
+    public async Task<List<Product>> getPage(ProductFilter productFilter, string sort, int page, int size)
     {
         var result = from item in _dbcontext.Products
             where productFilter.name == null || (item.name == productFilter.name
@@ -68,6 +68,15 @@ public class ProductFactory : IProductFactory
                                                    && productFilter.stock == null) || (item.stock == productFilter.stock
                 && productFilter.salePrice == null) || item.salePrice == productFilter.salePrice
             select item;
-        return await result.ToListAsync();
+        if (sort.Equals("ASC"))
+            return await result.OrderBy(
+                x =>
+                    x.name == productFilter.name ||
+                    x.size == productFilter.size ||
+                    x.stock == productFilter.stock ||
+                    x.price == productFilter.stock ||
+                    x.salePrice == productFilter.salePrice).Skip((page - 1) * size).Take(size).ToListAsync();
+        return await result.OrderByDescending(x => x.Equals(productFilter)).Skip((page - 1) * size).Take(size)
+            .ToListAsync();
     }
 }

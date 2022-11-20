@@ -1,4 +1,3 @@
-using System.Web.Http;
 using Microsoft.AspNetCore.Mvc;
 using UitStoreBackEnd.base_factory.response;
 
@@ -16,7 +15,7 @@ public interface IBaseController<I, DT, F>
 
     Task<BaseResponse<List<DT>>> getList();
 
-    Task<BaseResponse<List<DT>>> getPage(F Filter);
+    Task<BaseResponse<List<DT>>> getPage(F Filter, string sort, int page, int size);
 }
 
 public abstract class BaseController<I, DT, F> : ControllerBase
@@ -92,11 +91,11 @@ public abstract class BaseController<I, DT, F> : ControllerBase
         }
     }
 
-    protected async Task<BaseResponse<List<DT>>> getPage(F Filter)
+    protected async Task<BaseResponse<List<DT>>> getPage(F Filter, string sort, int page, int size)
     {
         try
         {
-            return await _responseFactory.successList(await _baseFactory.getPage(Filter));
+            return await _responseFactory.successList(await _baseFactory.getPage(Filter, sort, page, size));
         }
         catch (Exception e)
         {

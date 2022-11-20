@@ -13,8 +13,6 @@ public class dbcontext : DbContext
 
     public DbSet<DetailOrder> DetailOrders { get; set; }
 
-    public DbSet<Favorite_Product> FavoriteProducts { get; set; }
-
     public DbSet<Order> Orders { get; set; }
 
     public DbSet<Product> Products { get; set; }

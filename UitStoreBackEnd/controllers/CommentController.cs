@@ -49,9 +49,10 @@ public class CommentController : BaseController<Guid, Comment, CommentFilter>, I
         return base.getList();
     }
 
-    [HttpPost("page")]
-    public Task<BaseResponse<List<Comment>>> getPage([FromBody] CommentFilter Filter)
+    [HttpPost("{sort}/{page}/{size}/page")]
+    public Task<BaseResponse<List<Comment>>> getPage([FromQuery] CommentFilter Filter, string sort = "ASC",
+        int page = 0, int size = 10)
     {
-        return base.getPage(Filter);
+        return base.getPage(Filter, sort, page, size);
     }
 }

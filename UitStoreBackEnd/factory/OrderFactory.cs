@@ -59,11 +59,14 @@ public class OrderFactory : IOrderFactory
         return await _dbcontext.Orders.ToListAsync();
     }
 
-    public async Task<List<Order>> getPage(OrderFilter orderFilter)
+    public async Task<List<Order>> getPage(OrderFilter orderFilter, string sort, int page, int size)
     {
         var result = from item in _dbcontext.Orders
             where orderFilter.userId == null || item.userId == new Guid(orderFilter.userId)
             select item;
-        return await result.ToListAsync();
+        if (sort.Equals("ASC"))
+            return await result.OrderBy(x => x.Equals(orderFilter)).Skip((page - 1) * size).Take(size).ToListAsync();
+        return await result.OrderByDescending(x => x.Equals(orderFilter)).Skip((page - 1) * size).Take(size)
+            .ToListAsync();
     }
 }

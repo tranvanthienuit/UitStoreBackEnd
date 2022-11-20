@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
-using UitStoreBackEnd.exception;
 using UitStoreBackEnd.filter;
 using UitStoreBackEnd.model.login;
 
@@ -28,8 +27,8 @@ public class UserFactory : IUserFactory
 
     public async Task<User> create(User user)
     {
-        var resultCheck = existUser(user.username, user.telephone, user.email).Result;
-        if (resultCheck) throw new InvalidException("user exist", _responseFactory);
+        var resultCheck = existUser(user.username, user.telephone, user.email);
+        if (resultCheck != null) throw new Exception();
 
         var result = await _dbcontext.Users.AddAsync(user);
         await _dbcontext.SaveChangesAsync();
@@ -69,7 +68,7 @@ public class UserFactory : IUserFactory
         return await _dbcontext.Users.ToListAsync();
     }
 
-    public Task<List<User>> getPage(UserFilter Filter)
+    public Task<List<User>> getPage(UserFilter Filter, string sort, int page, int size)
     {
         return null!;
     }
@@ -91,19 +90,16 @@ public class UserFactory : IUserFactory
             .Users
             .Where(item => item.username == loginRequest.username
                            && item.password == loginRequest.password);
-        if (!user.Any()) throw new InvalidException("user not found", _responseFactory);
-        return user.First();
+        if (!user.Any()) throw new Exception();
+        return user.FirstOrDefault();
     }
 
-    public async Task<bool> existUser(string username, string telephone, string email)
+    public User existUser(string username, string telephone, string email)
     {
         var users = _dbcontext
-            .Users
-            .Where(
-                item =>
-                    item.username.Equals(username) ||
-                    item.telephone.Equals(telephone) ||
-                    item.email.Equals(email)).ToListAsync().Result.First();
-        return users.username == null ? false : true;
+            .Users.FirstOrDefault(item => item.username == username ||
+                                          item.telephone == telephone ||
+                                          item.email == email);
+        return users;
     }
 }

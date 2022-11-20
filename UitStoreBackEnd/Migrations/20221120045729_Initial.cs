@@ -15,9 +15,9 @@ namespace UitStoreBackEnd.Migrations
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     productId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    userId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    rating = table.Column<int>(type: "int", nullable: false),
-                    content = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    userId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    rating = table.Column<int>(type: "int", nullable: true),
+                    content = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,7 +31,11 @@ namespace UitStoreBackEnd.Migrations
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     orderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     productId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    quantity = table.Column<int>(type: "int", nullable: false)
+                    image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    price = table.Column<double>(type: "float", nullable: true),
+                    size = table.Column<int>(type: "int", nullable: true),
+                    quantity = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,7 +48,8 @@ namespace UitStoreBackEnd.Migrations
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     userId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    productId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    productId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    image = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,12 +61,12 @@ namespace UitStoreBackEnd.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    userId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    fullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    telephone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    total = table.Column<double>(type: "float", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    userId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    fullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    telephone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    total = table.Column<double>(type: "float", nullable: true),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -73,13 +78,14 @@ namespace UitStoreBackEnd.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    size = table.Column<int>(type: "int", nullable: false),
-                    stock = table.Column<int>(type: "int", nullable: false),
-                    price = table.Column<double>(type: "float", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    salePrice = table.Column<double>(type: "float", nullable: false),
-                    image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    size = table.Column<int>(type: "int", nullable: true),
+                    stock = table.Column<int>(type: "int", nullable: true),
+                    price = table.Column<double>(type: "float", nullable: true),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    salePrice = table.Column<double>(type: "float", nullable: true),
+                    image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    rating = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -91,35 +97,20 @@ namespace UitStoreBackEnd.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    fullname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    telephone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    birthday = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    avatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    loyalPoint = table.Column<int>(type: "int", nullable: false),
-                    role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    username = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    fullname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    telephone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    birthday = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    loyalPoint = table.Column<int>(type: "int", nullable: true),
+                    role = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Vouchers",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    price = table.Column<double>(type: "float", nullable: false),
-                    discount = table.Column<double>(type: "float", nullable: false),
-                    time = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Vouchers", x => x.id);
                 });
         }
 
@@ -142,9 +133,6 @@ namespace UitStoreBackEnd.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Vouchers");
         }
     }
 }

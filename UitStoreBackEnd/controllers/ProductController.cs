@@ -49,9 +49,10 @@ public class ProductController : BaseController<Guid, Product, ProductFilter>, I
         return base.getList();
     }
 
-    [HttpPost("page")]
-    public Task<BaseResponse<List<Product>>> getPage([FromBody] ProductFilter Filter)
+    [HttpPost("{sort}/{page}/{size}/page")]
+    public Task<BaseResponse<List<Product>>> getPage([FromQuery] ProductFilter Filter, string sort = "ASC",
+        int page = 0, int size = 10)
     {
-        return base.getPage(Filter);
+        return base.getPage(Filter, sort, page, size);
     }
 }
