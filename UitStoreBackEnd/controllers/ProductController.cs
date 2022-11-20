@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using UitStoreBackEnd.base_factory;
+using UitStoreBackEnd.base_factory.response;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
 using UitStoreBackEnd.filter;
@@ -19,37 +20,37 @@ public class ProductController : BaseController<Guid, Product, ProductFilter>, I
     }
 
     [HttpPost("create")]
-    public Task<HttpResponseMessage> create([FromBody] Product DT)
+    public Task<BaseResponse<Product>> create([FromBody] Product DT)
     {
         return base.create(DT);
     }
 
     [HttpDelete("{ID}/delete")]
-    public Task<HttpResponseMessage> deleteById(Guid ID)
+    public Task<BaseResponse<bool>> deleteById(Guid ID)
     {
         return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public Task<HttpResponseMessage> update([FromBody] Product DT)
+    public Task<BaseResponse<Product>> update([FromBody] Product DT)
     {
         return base.update(DT);
     }
 
     [HttpGet("{ID}/detail")]
-    public Task<HttpResponseMessage> getDetailById(Guid ID)
+    public Task<BaseResponse<Product>> getDetailById(Guid ID)
     {
         return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public Task<HttpResponseMessage> getList()
+    public Task<BaseResponse<List<Product>>> getList()
     {
         return base.getList();
     }
 
     [HttpPost("page")]
-    public Task<HttpResponseMessage> getPage([FromBody] ProductFilter Filter)
+    public Task<BaseResponse<List<Product>>> getPage([FromBody] ProductFilter Filter)
     {
         return base.getPage(Filter);
     }

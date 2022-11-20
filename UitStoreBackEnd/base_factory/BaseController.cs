@@ -1,23 +1,25 @@
 using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
+using UitStoreBackEnd.base_factory.response;
 
 namespace UitStoreBackEnd.base_factory;
 
 public interface IBaseController<I, DT, F>
 {
-    Task<HttpResponseMessage> create(DT DT);
+    Task<BaseResponse<DT>> create(DT DT);
 
-    Task<HttpResponseMessage> deleteById(I ID);
+    Task<BaseResponse<bool>> deleteById(I ID);
 
-    Task<HttpResponseMessage> update(DT DT);
+    Task<BaseResponse<DT>> update(DT DT);
 
-    Task<HttpResponseMessage> getDetailById(I ID);
+    Task<BaseResponse<DT>> getDetailById(I ID);
 
-    Task<HttpResponseMessage> getList();
+    Task<BaseResponse<List<DT>>> getList();
 
-    Task<HttpResponseMessage> getPage(F Filter);
+    Task<BaseResponse<List<DT>>> getPage(F Filter);
 }
 
-public abstract class BaseController<I, DT, F> : ApiController
+public abstract class BaseController<I, DT, F> : ControllerBase
 {
     protected readonly IBaseFactory<I, DT, F> _baseFactory;
     protected readonly IResponseFactory _responseFactory;
@@ -28,7 +30,7 @@ public abstract class BaseController<I, DT, F> : ApiController
         _responseFactory = responseFactory;
     }
 
-    protected async Task<HttpResponseMessage> create(DT DT)
+    protected async Task<BaseResponse<DT>> create(DT DT)
     {
         try
         {
@@ -36,11 +38,11 @@ public abstract class BaseController<I, DT, F> : ApiController
         }
         catch (Exception e)
         {
-            return Request.CreateResponse(await _responseFactory.error(e.Message));
+            return await _responseFactory.error<DT>(e.Message);
         }
     }
 
-    protected async Task<HttpResponseMessage> deleteById(I ID)
+    protected async Task<BaseResponse<bool>> deleteById(I ID)
     {
         try
         {
@@ -48,11 +50,11 @@ public abstract class BaseController<I, DT, F> : ApiController
         }
         catch (Exception e)
         {
-            return await _responseFactory.error(e.Message);
+            return await _responseFactory.error<bool>(e.Message);
         }
     }
 
-    protected async Task<HttpResponseMessage> update(DT DT)
+    protected async Task<BaseResponse<DT>> update(DT DT)
     {
         try
         {
@@ -60,12 +62,12 @@ public abstract class BaseController<I, DT, F> : ApiController
         }
         catch (Exception e)
         {
-            return await _responseFactory.error(e.Message);
+            return await _responseFactory.error<DT>(e.Message);
         }
     }
 
 
-    protected async Task<HttpResponseMessage> getDetailById(I ID)
+    protected async Task<BaseResponse<DT>> getDetailById(I ID)
     {
         try
         {
@@ -73,12 +75,12 @@ public abstract class BaseController<I, DT, F> : ApiController
         }
         catch (Exception e)
         {
-            return await _responseFactory.error(e.Message);
+            return await _responseFactory.error<DT>(e.Message);
         }
     }
 
 
-    protected async Task<HttpResponseMessage> getList()
+    protected async Task<BaseResponse<List<DT>>> getList()
     {
         try
         {
@@ -86,11 +88,11 @@ public abstract class BaseController<I, DT, F> : ApiController
         }
         catch (Exception e)
         {
-            return await _responseFactory.error(e.Message);
+            return await _responseFactory.error<List<DT>>(e.Message);
         }
     }
 
-    protected async Task<HttpResponseMessage> getPage(F Filter)
+    protected async Task<BaseResponse<List<DT>>> getPage(F Filter)
     {
         try
         {
@@ -98,7 +100,7 @@ public abstract class BaseController<I, DT, F> : ApiController
         }
         catch (Exception e)
         {
-            return await _responseFactory.error(e.Message);
+            return await _responseFactory.error<List<DT>>(e.Message);
         }
     }
 }

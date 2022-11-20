@@ -23,7 +23,6 @@ public class InvalidException : CustomAttributeFormatException
     public InvalidException(string? message, IResponseFactory responseFactory) : base(message)
     {
         _responseFactory = responseFactory;
-        _responseFactory.error(message);
     }
 
     public InvalidException(string? message, Exception? inner, IResponseFactory responseFactory) : base(message, inner)

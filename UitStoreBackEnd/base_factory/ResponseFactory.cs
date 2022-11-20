@@ -1,50 +1,49 @@
-using System.Net;
-using System.Web.Http;
 using UitStoreBackEnd.base_factory.response;
 
 namespace UitStoreBackEnd.base_factory;
 
 public interface IResponseFactory
 {
-    Task<HttpResponseMessage> successModel<DT>(DT dt);
+    Task<BaseResponse<DT>> successModel<DT>(DT dt);
 
-    Task<HttpResponseMessage> successList<DT>(List<DT> List);
+    Task<BaseResponse<List<DT>>> successList<DT>(List<DT> List);
 
-    Task<HttpResponseMessage> error(string exception);
+    Task<BaseResponse<DT>> error<DT>(string exception);
 
-    Task<HttpResponseMessage> delete(bool result);
+    Task<BaseResponse<bool>> delete(bool result);
 }
 
-public class ResponseFactory : ApiController, IResponseFactory
+public class ResponseFactory : IResponseFactory
 {
-    public async Task<HttpResponseMessage> successModel<DT>(DT dt)
+    public async Task<BaseResponse<DT>> successModel<DT>(DT dt)
     {
         var response = new BaseResponse<DT>();
         response.success = true;
         response.data = dt;
-        return Request.CreateResponse(HttpStatusCode.OK, response);
+        return response;
     }
 
-    public async Task<HttpResponseMessage> successList<DT>(List<DT> list)
+    public async Task<BaseResponse<List<DT>>> successList<DT>(List<DT> list)
     {
         var response = new BaseResponse<List<DT>>();
         response.success = true;
         response.data = list;
-        return Request.CreateResponse(HttpStatusCode.OK, response);
+        return response;
     }
 
-    public async Task<HttpResponseMessage> error(string exception)
+    public async Task<BaseResponse<DT>> error<DT>(string exception)
     {
-        var response = new BaseResponse<string>();
-        response.data = exception;
+        var response = new BaseResponse<DT>();
+        response.data = default;
         response.success = false;
-        return Request.CreateResponse(HttpStatusCode.OK, response);
+        return response;
     }
 
-    public async Task<HttpResponseMessage> delete(bool result)
+    public async Task<BaseResponse<bool>> delete(bool result)
     {
-        var response = new DeleteResponse();
+        var response = new BaseResponse<bool>();
         response.success = result;
-        return Request.CreateResponse(HttpStatusCode.OK, response);
+        response.data = true;
+        return response;
     }
 }

@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using UitStoreBackEnd.base_factory;
+using UitStoreBackEnd.base_factory.response;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
 using UitStoreBackEnd.filter;
@@ -10,9 +11,9 @@ namespace UitStoreBackEnd.Controllers;
 
 public interface IUserController : IBaseController<Guid, User, UserFilter>
 {
-    Task<HttpResponseMessage> changePassword(Guid id, string password);
+    Task<BaseResponse<User>> changePassword(Guid id, string password);
 
-    Task<HttpResponseMessage> login(LoginRequest loginRequest);
+    Task<BaseResponse<User>> login(LoginRequest loginRequest);
 }
 
 [Route("/api/v1/user")]
@@ -27,66 +28,64 @@ public class UserController : BaseController<Guid, User, UserFilter>, IUserContr
     }
 
     [HttpPost("create")]
-    public Task<HttpResponseMessage> create([FromBody] User DT)
+    public Task<BaseResponse<User>> create([FromBody] User DT)
     {
         return base.create(DT);
     }
 
     [HttpDelete("{ID}/delete")]
-    public Task<HttpResponseMessage> deleteById(Guid ID)
+    public Task<BaseResponse<bool>> deleteById(Guid ID)
     {
         return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public Task<HttpResponseMessage> update([FromBody] User DT)
+    public Task<BaseResponse<User>> update([FromBody] User DT)
     {
         return base.update(DT);
     }
 
     [HttpGet("{ID}/detail")]
-    public Task<HttpResponseMessage> getDetailById(Guid ID)
+    public Task<BaseResponse<User>> getDetailById(Guid ID)
     {
         return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public Task<HttpResponseMessage> getList()
+    public Task<BaseResponse<List<User>>> getList()
     {
         return base.getList();
     }
 
     [HttpPost("page")]
-    public Task<HttpResponseMessage> getPage([FromBody] UserFilter Filter)
+    public Task<BaseResponse<List<User>>> getPage([FromBody] UserFilter Filter)
     {
         return base.getPage(Filter);
     }
 
     [HttpPost("{id}/change-password")]
-    public async Task<HttpResponseMessage> changePassword(Guid id, [FromBody] string password)
+    public async Task<BaseResponse<User>> changePassword(Guid id, [FromBody] string password)
     {
         try
         {
-            return Request.CreateResponse(HttpStatusCode.OK,
-                _responseFactory.successModel(await _userFactory.changePassword(id, password)));
+            return await _responseFactory.successModel(await _userFactory.changePassword(id, password));
         }
         catch (Exception e)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, e.Message);
+            return await _responseFactory.error<User>(e.Message);
         }
     }
 
     [HttpPost("login")]
-    public async Task<HttpResponseMessage> login([FromBody] LoginRequest loginRequest)
+    public async Task<BaseResponse<User>> login([FromBody] LoginRequest loginRequest)
     {
         try
         {
-            return Request.CreateResponse(HttpStatusCode.OK,
-                _responseFactory.successModel(await _userFactory.login(loginRequest)));
+            return await _responseFactory.successModel(await _userFactory.login(loginRequest));
         }
         catch (Exception e)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, e.Message);
+            return await _responseFactory.error<User>(e.Message);
         }
     }
 }

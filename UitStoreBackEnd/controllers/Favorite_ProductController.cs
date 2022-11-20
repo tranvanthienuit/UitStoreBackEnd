@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using UitStoreBackEnd.base_factory;
+using UitStoreBackEnd.base_factory.response;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
 using UitStoreBackEnd.filter;
@@ -20,37 +21,37 @@ public class FavoriteProductController : BaseController<Guid, Favorite_Product, 
     }
 
     [HttpPost("create")]
-    public Task<HttpResponseMessage> create([FromBody] Favorite_Product DT)
+    public Task<BaseResponse<Favorite_Product>> create([FromBody] Favorite_Product DT)
     {
         return base.create(DT);
     }
 
     [HttpDelete("{ID}/delete")]
-    public Task<HttpResponseMessage> deleteById(Guid ID)
+    public Task<BaseResponse<bool>> deleteById(Guid ID)
     {
         return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public Task<HttpResponseMessage> update([FromBody] Favorite_Product DT)
+    public Task<BaseResponse<Favorite_Product>> update([FromBody] Favorite_Product DT)
     {
         return base.update(DT);
     }
 
     [HttpGet("{ID}/detail")]
-    public Task<HttpResponseMessage> getDetailById(Guid ID)
+    public Task<BaseResponse<Favorite_Product>> getDetailById(Guid ID)
     {
         return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public Task<HttpResponseMessage> getList()
+    public Task<BaseResponse<List<Favorite_Product>>> getList()
     {
         return base.getList();
     }
 
     [HttpPost("page")]
-    public Task<HttpResponseMessage> getPage([FromBody] FavoriteProductFilter Filter)
+    public Task<BaseResponse<List<Favorite_Product>>> getPage([FromBody] FavoriteProductFilter Filter)
     {
         return base.getPage(Filter);
     }
