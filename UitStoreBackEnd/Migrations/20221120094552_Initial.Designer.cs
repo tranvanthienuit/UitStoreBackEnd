@@ -12,7 +12,7 @@ using UitStoreBackEnd.db_context;
 namespace UitStoreBackEnd.Migrations
 {
     [DbContext(typeof(dbcontext))]
-    [Migration("20221120083103_Initial")]
+    [Migration("20221120094552_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,7 +81,7 @@ namespace UitStoreBackEnd.Migrations
 
             modelBuilder.Entity("UitStoreBackEnd.entity.Order", b =>
                 {
-                    b.Property<Guid?>("id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 

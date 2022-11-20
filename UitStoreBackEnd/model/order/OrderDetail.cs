@@ -1,9 +1,9 @@
-namespace UitStoreBackEnd.entity;
+using UitStoreBackEnd.entity;
 
-public class Order
+namespace UitStoreBackEnd.model.order;
+
+public class OrderDetail
 {
-    public Guid id { get; set; }
-
     public Guid? userId { get; set; }
 
     public string? fullName { get; set; }
@@ -15,4 +15,6 @@ public class Order
     public double? total { get; set; }
 
     public string? status { get; set; }
+
+    public List<DetailOrder> DetailOrders { get; set; }
 }

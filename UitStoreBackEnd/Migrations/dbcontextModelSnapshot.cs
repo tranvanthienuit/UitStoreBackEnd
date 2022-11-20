@@ -79,7 +79,7 @@ namespace UitStoreBackEnd.Migrations
 
             modelBuilder.Entity("UitStoreBackEnd.entity.Order", b =>
                 {
-                    b.Property<Guid?>("id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 

@@ -25,10 +25,11 @@ public class CommentFactory : ICommentFactory
     public async Task<Comment> create(Comment Comment)
     {
         var product = await _productFactory.getDetailById(Comment.productId);
-        product.rating = (product.rating + Comment.rating) / 2;
-        await _productFactory.update(product);
         var result = await _dbcontext.Comments.AddAsync(Comment);
         await _dbcontext.SaveChangesAsync();
+
+        product.rating = getList().Result.Where(x => x.productId == Comment.productId).ToList().Average(x => x.rating);
+        await _productFactory.update(product);
         return result.Entity;
     }
 

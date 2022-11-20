@@ -3,20 +3,24 @@ using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.filter;
+using UitStoreBackEnd.model.order;
 
 namespace UitStoreBackEnd.factory;
 
 public interface IOrderFactory : IBaseFactory<Guid, Order, OrderFilter>
 {
+    Task<Order> createOrder(OrderDetail orderDetail);
 }
 
 public class OrderFactory : IOrderFactory
 {
     private readonly dbcontext _dbcontext;
+    private readonly IDetailOrderFactory _detailOrderFactory;
 
-    public OrderFactory(dbcontext dbcontext)
+    public OrderFactory(dbcontext dbcontext, IDetailOrderFactory detailOrderFactory)
     {
         _dbcontext = dbcontext;
+        _detailOrderFactory = detailOrderFactory;
     }
 
     public async Task<Order> create(Order Order)
@@ -65,5 +69,44 @@ public class OrderFactory : IOrderFactory
             where orderFilter.userId == null || item.userId == new Guid(orderFilter.userId)
             select item;
         return await result.Skip((page - 1) * size).Take(size).ToListAsync();
+    }
+
+    public async Task<Order> createOrder(OrderDetail orderDetail)
+    {
+        try
+        {
+            var order = new Order
+            {
+                userId = orderDetail.userId,
+                fullName = orderDetail.fullName,
+                telephone = orderDetail.telephone,
+                address = orderDetail.address,
+                total = orderDetail.total,
+                status = orderDetail.status
+            };
+            var result = await _dbcontext.Orders.AddAsync(order);
+            await _dbcontext.SaveChangesAsync();
+            var newOrder = result.Entity;
+            foreach (var item in orderDetail.DetailOrders)
+            {
+                var detailOrder = new DetailOrder
+                {
+                    orderId = newOrder.id,
+                    productId = item.productId,
+                    image = item.image,
+                    name = item.name,
+                    price = item.price,
+                    size = item.size,
+                    quantity = item.quantity
+                };
+                await _detailOrderFactory.create(detailOrder);
+            }
+
+            return newOrder;
+        }
+        catch (Exception e)
+        {
+            throw new Exception();
+        }
     }
 }

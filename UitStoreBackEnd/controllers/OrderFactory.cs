@@ -4,25 +4,31 @@ using UitStoreBackEnd.base_factory.response;
 using UitStoreBackEnd.entity;
 using UitStoreBackEnd.factory;
 using UitStoreBackEnd.filter;
+using UitStoreBackEnd.model.order;
 
 namespace UitStoreBackEnd.Controllers;
 
 public interface IOrderController : IBaseController<Guid, Order, OrderFilter>
 {
+    public Task<BaseResponse<Order>> createOrder(OrderDetail orderDetail);
 }
 
 [Route("/api/v1/order")]
 public class OrderController : BaseController<Guid, Order, OrderFilter>, IOrderController
 {
-    public OrderController(IOrderFactory baseFactory, IResponseFactory responseFactory) : base(baseFactory,
-        responseFactory)
+    private readonly IOrderFactory _orderFactory;
+
+    public OrderController(IOrderFactory baseFactory, IResponseFactory responseFactory, IOrderFactory orderFactory) :
+        base(baseFactory,
+            responseFactory)
     {
+        _orderFactory = orderFactory;
     }
 
     [HttpPost("create")]
     public Task<BaseResponse<Order>> create([FromBody] Order DT)
     {
-        return base.create(DT);
+        return null;
     }
 
     [HttpDelete("{ID}/delete")]
@@ -54,5 +60,19 @@ public class OrderController : BaseController<Guid, Order, OrderFilter>, IOrderC
         int size = 10)
     {
         return base.getPage(Filter, sort, page, size);
+    }
+
+    [HttpPost("create/order")]
+    public async Task<BaseResponse<Order>> createOrder([FromBody] OrderDetail orderDetail)
+    {
+        try
+        {
+            return await _responseFactory.successModel(await _orderFactory.createOrder(orderDetail));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }
