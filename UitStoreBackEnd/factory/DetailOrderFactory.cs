@@ -72,10 +72,7 @@ public class DetailOrderFactory : IDetailOrderFactory
                                                           && detailOrderFilter.quantity == null) ||
                   item.quantity == detailOrderFilter.quantity
             select item;
-        if (sort.Equals("ASC"))
-            return await result.OrderBy(x => x.Equals(detailOrderFilter)).Skip((page - 1) * size).Take(size)
-                .ToListAsync();
-        return await result.OrderByDescending(x => x.Equals(detailOrderFilter)).Skip((page - 1) * size).Take(size)
+        return await result.Skip((page - 1) * size).Take(size)
             .ToListAsync();
     }
 

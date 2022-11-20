@@ -72,9 +72,6 @@ public class CommentFactory : ICommentFactory
                                                    && commentFilter.productId == null) ||
                   item.productId == new Guid(commentFilter.productId)
             select item;
-        if (sort.Equals("ASC"))
-            return await result.OrderBy(x => x.Equals(commentFilter)).Skip((page - 1) * size).Take(size).ToListAsync();
-        return await result.OrderByDescending(x => x.Equals(commentFilter)).Skip((page - 1) * size).Take(size)
-            .ToListAsync();
+        return await result.Skip((page - 1) * size).Take(size).ToListAsync();
     }
 }

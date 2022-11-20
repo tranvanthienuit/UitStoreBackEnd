@@ -64,18 +64,20 @@ public class ProductFactory : IProductFactory
         var result = from item in _dbcontext.Products
             select item;
 
-        result = productFilter.createDate == "ASC"
-            ? result.OrderBy(x => x.createDate)
-            : result.OrderByDescending(x => x.createDate);
-        result = productFilter.stock == "ASC"
-            ? result.OrderBy(x => x.stock)
-            : result.OrderByDescending(x => x.stock);
-        result = productFilter.discount == "ASC"
-            ? result.OrderBy(x => x.discount)
-            : result.OrderByDescending(x => x.discount);
-        result = productFilter.salePrice == "ASC"
-            ? result.OrderBy(x => x.salePrice)
-            : result.OrderByDescending(x => x.salePrice);
-        return await result.ToListAsync();
+        List<Product> products = await result.ToListAsync();
+
+        products = productFilter.createDate == "ASC"
+            ? products.OrderBy(x => x.createDate).ToList()
+            : products.OrderByDescending(x => x.createDate).ToList();
+        products = productFilter.stock == "ASC"
+            ? products.OrderBy(x => x.stock).ToList()
+            : products.OrderByDescending(x => x.stock).ToList();
+        products = productFilter.discount == "ASC"
+            ? products.OrderBy(x => x.discount).ToList()
+            : products.OrderByDescending(x => x.discount).ToList();
+        products = productFilter.salePrice == "ASC"
+            ? products.OrderBy(x => x.salePrice).ToList()
+            : products.OrderByDescending(x => x.salePrice).ToList();
+        return products.Skip((page - 1) * size).Take(size).ToList();
     }
 }

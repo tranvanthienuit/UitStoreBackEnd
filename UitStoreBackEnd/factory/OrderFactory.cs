@@ -64,9 +64,6 @@ public class OrderFactory : IOrderFactory
         var result = from item in _dbcontext.Orders
             where orderFilter.userId == null || item.userId == new Guid(orderFilter.userId)
             select item;
-        if (sort.Equals("ASC"))
-            return await result.OrderBy(x => x.Equals(orderFilter)).Skip((page - 1) * size).Take(size).ToListAsync();
-        return await result.OrderByDescending(x => x.Equals(orderFilter)).Skip((page - 1) * size).Take(size)
-            .ToListAsync();
+        return await result.Skip((page - 1) * size).Take(size).ToListAsync();
     }
 }
