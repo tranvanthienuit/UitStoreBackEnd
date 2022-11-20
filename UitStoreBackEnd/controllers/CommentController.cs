@@ -19,37 +19,37 @@ public class CommentController : BaseController<Guid, Comment, CommentFilter>, I
     }
 
     [HttpPost("create")]
-    public Task<IActionResult> create([FromBody] Comment DT)
+    public Task<HttpResponseMessage> create([FromBody] Comment DT)
     {
         return base.create(DT);
     }
 
     [HttpDelete("{ID}/delete")]
-    public Task<IActionResult> deleteById(Guid ID)
+    public Task<HttpResponseMessage> deleteById(Guid ID)
     {
         return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public Task<IActionResult> update([FromBody] Comment DT)
+    public Task<HttpResponseMessage> update([FromBody] Comment DT)
     {
         return base.update(DT);
     }
 
     [HttpGet("{ID}/detail")]
-    public Task<IActionResult> getDetailById(Guid ID)
+    public Task<HttpResponseMessage> getDetailById(Guid ID)
     {
         return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public Task<IActionResult> getList()
+    public Task<HttpResponseMessage> getList()
     {
         return base.getList();
     }
 
     [HttpPost("page")]
-    public Task<IActionResult> getPage([FromBody] CommentFilter Filter)
+    public Task<HttpResponseMessage> getPage([FromBody] CommentFilter Filter)
     {
         return base.getPage(Filter);
     }

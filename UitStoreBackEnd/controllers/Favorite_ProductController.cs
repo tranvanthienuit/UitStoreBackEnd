@@ -20,37 +20,37 @@ public class FavoriteProductController : BaseController<Guid, Favorite_Product, 
     }
 
     [HttpPost("create")]
-    public Task<IActionResult> create([FromBody] Favorite_Product DT)
+    public Task<HttpResponseMessage> create([FromBody] Favorite_Product DT)
     {
         return base.create(DT);
     }
 
     [HttpDelete("{ID}/delete")]
-    public Task<IActionResult> deleteById(Guid ID)
+    public Task<HttpResponseMessage> deleteById(Guid ID)
     {
         return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public Task<IActionResult> update([FromBody] Favorite_Product DT)
+    public Task<HttpResponseMessage> update([FromBody] Favorite_Product DT)
     {
         return base.update(DT);
     }
 
     [HttpGet("{ID}/detail")]
-    public Task<IActionResult> getDetailById(Guid ID)
+    public Task<HttpResponseMessage> getDetailById(Guid ID)
     {
         return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public Task<IActionResult> getList()
+    public Task<HttpResponseMessage> getList()
     {
         return base.getList();
     }
 
     [HttpPost("page")]
-    public Task<IActionResult> getPage([FromBody] FavoriteProductFilter Filter)
+    public Task<HttpResponseMessage> getPage([FromBody] FavoriteProductFilter Filter)
     {
         return base.getPage(Filter);
     }

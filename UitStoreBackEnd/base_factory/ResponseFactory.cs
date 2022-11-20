@@ -1,49 +1,50 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Web.Http;
 using UitStoreBackEnd.base_factory.response;
 
 namespace UitStoreBackEnd.base_factory;
 
 public interface IResponseFactory
 {
-    IActionResult successModel<DT>(DT dt);
+    Task<HttpResponseMessage> successModel<DT>(DT dt);
 
-    IActionResult successList<DT>(List<DT> List);
+    Task<HttpResponseMessage> successList<DT>(List<DT> List);
 
-    IActionResult error(string exception);
+    Task<HttpResponseMessage> error(string exception);
 
-    IActionResult delete(bool result);
+    Task<HttpResponseMessage> delete(bool result);
 }
 
-public class ResponseFactory : Controller, IResponseFactory
+public class ResponseFactory : ApiController, IResponseFactory
 {
-    public IActionResult successModel<DT>(DT dt)
+    public async Task<HttpResponseMessage> successModel<DT>(DT dt)
     {
         var response = new BaseResponse<DT>();
         response.success = true;
         response.data = dt;
-        return Ok(response);
+        return Request.CreateResponse(HttpStatusCode.OK, response);
     }
 
-    public IActionResult successList<DT>(List<DT> list)
+    public async Task<HttpResponseMessage> successList<DT>(List<DT> list)
     {
         var response = new BaseResponse<List<DT>>();
         response.success = true;
         response.data = list;
-        return Ok(response);
+        return Request.CreateResponse(HttpStatusCode.OK, response);
     }
 
-    public IActionResult error(string exception)
+    public async Task<HttpResponseMessage> error(string exception)
     {
         var response = new BaseResponse<string>();
         response.data = exception;
         response.success = false;
-        return Ok(response);
+        return Request.CreateResponse(HttpStatusCode.OK, response);
     }
 
-    public IActionResult delete(bool result)
+    public async Task<HttpResponseMessage> delete(bool result)
     {
         var response = new DeleteResponse();
         response.success = result;
-        return Ok(response);
+        return Request.CreateResponse(HttpStatusCode.OK, response);
     }
 }

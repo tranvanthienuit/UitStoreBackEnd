@@ -19,37 +19,37 @@ public class OrderController : BaseController<Guid, Order, OrderFilter>, IOrderC
     }
 
     [HttpPost("create")]
-    public Task<IActionResult> create([FromBody] Order DT)
+    public Task<HttpResponseMessage> create([FromBody] Order DT)
     {
         return base.create(DT);
     }
 
     [HttpDelete("{ID}/delete")]
-    public Task<IActionResult> deleteById(Guid ID)
+    public Task<HttpResponseMessage> deleteById(Guid ID)
     {
         return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public Task<IActionResult> update([FromBody] Order DT)
+    public Task<HttpResponseMessage> update([FromBody] Order DT)
     {
         return base.update(DT);
     }
 
     [HttpGet("{ID}/detail")]
-    public Task<IActionResult> getDetailById(Guid ID)
+    public Task<HttpResponseMessage> getDetailById(Guid ID)
     {
         return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public Task<IActionResult> getList()
+    public Task<HttpResponseMessage> getList()
     {
         return base.getList();
     }
 
     [HttpPost("page")]
-    public Task<IActionResult> getPage([FromBody] OrderFilter Filter)
+    public Task<HttpResponseMessage> getPage([FromBody] OrderFilter Filter)
     {
         return base.getPage(Filter);
     }

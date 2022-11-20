@@ -19,37 +19,37 @@ public class DetailOrderController : BaseController<Guid, DetailOrder, DetailOrd
     }
 
     [HttpPost("create")]
-    public Task<IActionResult> create([FromBody] DetailOrder DT)
+    public Task<HttpResponseMessage> create([FromBody] DetailOrder DT)
     {
         return base.create(DT);
     }
 
     [HttpDelete("{ID}/delete")]
-    public Task<IActionResult> deleteById(Guid ID)
+    public Task<HttpResponseMessage> deleteById(Guid ID)
     {
         return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public Task<IActionResult> update([FromBody] DetailOrder DT)
+    public Task<HttpResponseMessage> update([FromBody] DetailOrder DT)
     {
         return base.update(DT);
     }
 
     [HttpGet("{ID}/detail")]
-    public Task<IActionResult> getDetailById(Guid ID)
+    public Task<HttpResponseMessage> getDetailById(Guid ID)
     {
         return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public Task<IActionResult> getList()
+    public Task<HttpResponseMessage> getList()
     {
         return base.getList();
     }
 
     [HttpPost("page")]
-    public Task<IActionResult> getPage([FromBody] DetailOrderFilter Filter)
+    public Task<HttpResponseMessage> getPage([FromBody] DetailOrderFilter Filter)
     {
         return base.getPage(Filter);
     }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.db_context;
 using UitStoreBackEnd.entity;
+using UitStoreBackEnd.exception;
 using UitStoreBackEnd.filter;
 using UitStoreBackEnd.model.login;
 
@@ -28,7 +29,7 @@ public class UserFactory : IUserFactory
     public async Task<User> create(User user)
     {
         var resultCheck = existUser(user.username, user.telephone, user.email).Result;
-        if (resultCheck) return await Task.FromResult<User>(null);
+        if (resultCheck) throw new InvalidException("user exist", _responseFactory);
 
         var result = await _dbcontext.Users.AddAsync(user);
         await _dbcontext.SaveChangesAsync();
@@ -90,7 +91,7 @@ public class UserFactory : IUserFactory
             .Users
             .Where(item => item.username == loginRequest.username
                            && item.password == loginRequest.password);
-        if (!user.Any()) return await Task.FromResult<User>(null);
+        if (!user.Any()) throw new InvalidException("user not found", _responseFactory);
         return user.First();
     }
 

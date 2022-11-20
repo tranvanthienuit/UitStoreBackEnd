@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using UitStoreBackEnd.base_factory;
 using UitStoreBackEnd.entity;
@@ -9,9 +10,9 @@ namespace UitStoreBackEnd.Controllers;
 
 public interface IUserController : IBaseController<Guid, User, UserFilter>
 {
-    Task<IActionResult> changePassword(Guid id, string password);
+    Task<HttpResponseMessage> changePassword(Guid id, string password);
 
-    Task<IActionResult> login(LoginRequest loginRequest);
+    Task<HttpResponseMessage> login(LoginRequest loginRequest);
 }
 
 [Route("/api/v1/user")]
@@ -26,50 +27,66 @@ public class UserController : BaseController<Guid, User, UserFilter>, IUserContr
     }
 
     [HttpPost("create")]
-    public Task<IActionResult> create([FromBody] User DT)
+    public Task<HttpResponseMessage> create([FromBody] User DT)
     {
         return base.create(DT);
     }
 
     [HttpDelete("{ID}/delete")]
-    public Task<IActionResult> deleteById(Guid ID)
+    public Task<HttpResponseMessage> deleteById(Guid ID)
     {
         return base.deleteById(ID);
     }
 
     [HttpPut("update")]
-    public Task<IActionResult> update([FromBody] User DT)
+    public Task<HttpResponseMessage> update([FromBody] User DT)
     {
         return base.update(DT);
     }
 
     [HttpGet("{ID}/detail")]
-    public Task<IActionResult> getDetailById(Guid ID)
+    public Task<HttpResponseMessage> getDetailById(Guid ID)
     {
         return base.getDetailById(ID);
     }
 
     [HttpGet("list")]
-    public Task<IActionResult> getList()
+    public Task<HttpResponseMessage> getList()
     {
         return base.getList();
     }
 
     [HttpPost("page")]
-    public Task<IActionResult> getPage([FromBody] UserFilter Filter)
+    public Task<HttpResponseMessage> getPage([FromBody] UserFilter Filter)
     {
         return base.getPage(Filter);
     }
 
     [HttpPost("{id}/change-password")]
-    public async Task<IActionResult> changePassword(Guid id, [FromBody] string password)
+    public async Task<HttpResponseMessage> changePassword(Guid id, [FromBody] string password)
     {
-        return Ok(_responseFactory.successModel(await _userFactory.changePassword(id, password)));
+        try
+        {
+            return Request.CreateResponse(HttpStatusCode.OK,
+                _responseFactory.successModel(await _userFactory.changePassword(id, password)));
+        }
+        catch (Exception e)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, e.Message);
+        }
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> login([FromBody] LoginRequest loginRequest)
+    public async Task<HttpResponseMessage> login([FromBody] LoginRequest loginRequest)
     {
-        return Ok(_responseFactory.successModel(await _userFactory.login(loginRequest)));
+        try
+        {
+            return Request.CreateResponse(HttpStatusCode.OK,
+                _responseFactory.successModel(await _userFactory.login(loginRequest)));
+        }
+        catch (Exception e)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, e.Message);
+        }
     }
 }
