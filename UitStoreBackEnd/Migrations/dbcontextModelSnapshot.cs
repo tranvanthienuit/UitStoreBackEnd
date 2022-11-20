@@ -77,26 +77,6 @@ namespace UitStoreBackEnd.Migrations
                     b.ToTable("DetailOrders");
                 });
 
-            modelBuilder.Entity("UitStoreBackEnd.entity.Favorite_Product", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("image")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("productId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("userId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("id");
-
-                    b.ToTable("FavoriteProducts");
-                });
-
             modelBuilder.Entity("UitStoreBackEnd.entity.Order", b =>
                 {
                     b.Property<Guid?>("id")
@@ -132,8 +112,17 @@ namespace UitStoreBackEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("createDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("discount")
+                        .HasColumnType("float");
 
                     b.Property<string>("image")
                         .HasColumnType("nvarchar(max)");
@@ -150,8 +139,8 @@ namespace UitStoreBackEnd.Migrations
                     b.Property<double?>("salePrice")
                         .HasColumnType("float");
 
-                    b.Property<int?>("size")
-                        .HasColumnType("int");
+                    b.Property<string>("size")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("stock")
                         .HasColumnType("int");
@@ -173,8 +162,8 @@ namespace UitStoreBackEnd.Migrations
                     b.Property<string>("avatar")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("birthday")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("birthday")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("email")
                         .HasColumnType("nvarchar(max)");

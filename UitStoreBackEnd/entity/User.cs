@@ -14,7 +14,7 @@ public class User
 
     public string? address { get; set; }
 
-    public string? birthday { get; set; }
+    public DateTime? birthday { get; set; }
 
     public string? email { get; set; }
 

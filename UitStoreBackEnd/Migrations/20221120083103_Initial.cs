@@ -43,20 +43,6 @@ namespace UitStoreBackEnd.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FavoriteProducts",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    userId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    productId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    image = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FavoriteProducts", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -79,13 +65,16 @@ namespace UitStoreBackEnd.Migrations
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    size = table.Column<int>(type: "int", nullable: true),
+                    size = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     stock = table.Column<int>(type: "int", nullable: true),
                     price = table.Column<double>(type: "float", nullable: true),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    category = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     salePrice = table.Column<double>(type: "float", nullable: true),
                     image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    rating = table.Column<double>(type: "float", nullable: true)
+                    discount = table.Column<double>(type: "float", nullable: true),
+                    rating = table.Column<double>(type: "float", nullable: true),
+                    createDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -102,7 +91,7 @@ namespace UitStoreBackEnd.Migrations
                     fullname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     telephone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    birthday = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    birthday = table.Column<DateTime>(type: "datetime2", nullable: true),
                     email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     loyalPoint = table.Column<int>(type: "int", nullable: true),
@@ -121,9 +110,6 @@ namespace UitStoreBackEnd.Migrations
 
             migrationBuilder.DropTable(
                 name: "DetailOrders");
-
-            migrationBuilder.DropTable(
-                name: "FavoriteProducts");
 
             migrationBuilder.DropTable(
                 name: "Orders");

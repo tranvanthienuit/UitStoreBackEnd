@@ -62,21 +62,20 @@ public class ProductFactory : IProductFactory
     public async Task<List<Product>> getPage(ProductFilter productFilter, string sort, int page, int size)
     {
         var result = from item in _dbcontext.Products
-            where productFilter.name == null || (item.name == productFilter.name
-                                                 && productFilter.price == null) || (item.price == productFilter.price
-                && productFilter.size == null) || (item.size == productFilter.size
-                                                   && productFilter.stock == null) || (item.stock == productFilter.stock
-                && productFilter.salePrice == null) || item.salePrice == productFilter.salePrice
             select item;
-        if (sort.Equals("ASC"))
-            return await result.OrderBy(
-                x =>
-                    x.name == productFilter.name ||
-                    x.size == productFilter.size ||
-                    x.stock == productFilter.stock ||
-                    x.price == productFilter.stock ||
-                    x.salePrice == productFilter.salePrice).Skip((page - 1) * size).Take(size).ToListAsync();
-        return await result.OrderByDescending(x => x.Equals(productFilter)).Skip((page - 1) * size).Take(size)
-            .ToListAsync();
+
+        result = productFilter.createDate == "ASC"
+            ? result.OrderBy(x => x.createDate)
+            : result.OrderByDescending(x => x.createDate);
+        result = productFilter.stock == "ASC"
+            ? result.OrderBy(x => x.stock)
+            : result.OrderByDescending(x => x.stock);
+        result = productFilter.discount == "ASC"
+            ? result.OrderBy(x => x.discount)
+            : result.OrderByDescending(x => x.discount);
+        result = productFilter.salePrice == "ASC"
+            ? result.OrderBy(x => x.salePrice)
+            : result.OrderByDescending(x => x.salePrice);
+        return await result.ToListAsync();
     }
 }

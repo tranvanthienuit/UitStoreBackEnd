@@ -2,13 +2,11 @@ namespace UitStoreBackEnd.filter;
 
 public class ProductFilter
 {
-    public string name { get; set; }
+    public string? createDate { get; set; } = "ASC";
 
-    public int? size { get; set; }
+    public string? stock { get; set; } = "ASC";
 
-    public int? stock { get; set; }
+    public string? discount { get; set; } = "ASC";
 
-    public double? price { get; set; }
-
-    public double? salePrice { get; set; }
+    public string? salePrice { get; set; } = "ASC";
 }
