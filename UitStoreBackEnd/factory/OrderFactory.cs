@@ -68,7 +68,8 @@ public class OrderFactory : IOrderFactory
         var result = from item in _dbcontext.Orders
             where orderFilter.userId == null || item.userId == new Guid(orderFilter.userId)
             select item;
-        return await result.Skip((page - 1) * size).Take(size).ToListAsync();
+        List<Order> orders = await result.ToListAsync();
+        return orders.Skip((page - 1) * size).Take(size).ToList();
     }
 
     public async Task<Order> createOrder(OrderDetail orderDetail)

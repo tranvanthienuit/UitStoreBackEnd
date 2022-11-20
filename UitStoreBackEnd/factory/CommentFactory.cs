@@ -73,6 +73,7 @@ public class CommentFactory : ICommentFactory
                                                    && commentFilter.productId == null) ||
                   item.productId == new Guid(commentFilter.productId)
             select item;
-        return await result.Skip((page - 1) * size).Take(size).ToListAsync();
+        List<Comment> comments = await result.ToListAsync();
+        return comments.Skip((page - 1) * size).Take(size).ToList();
     }
 }

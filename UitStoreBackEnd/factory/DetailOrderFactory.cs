@@ -72,8 +72,9 @@ public class DetailOrderFactory : IDetailOrderFactory
                                                           && detailOrderFilter.quantity == null) ||
                   item.quantity == detailOrderFilter.quantity
             select item;
-        return await result.Skip((page - 1) * size).Take(size)
-            .ToListAsync();
+        List<DetailOrder> detailOrders = await result.ToListAsync();
+        return detailOrders.Skip((page - 1) * size).Take(size)
+            .ToList();
     }
 
     public async Task<DetailOrder> getDetail(Guid id)
