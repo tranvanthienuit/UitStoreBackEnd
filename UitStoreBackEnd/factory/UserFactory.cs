@@ -27,7 +27,7 @@ public class UserFactory : IUserFactory
 
     public async Task<User> create(User user)
     {
-        var resultCheck = existUser(user.username, user.telephone, user.email);
+        var resultCheck = existUser(user.username, user.telephone);
         if (resultCheck != null) throw new Exception();
 
         var result = await _dbcontext.Users.AddAsync(user);
@@ -94,12 +94,11 @@ public class UserFactory : IUserFactory
         return user.FirstOrDefault();
     }
 
-    public User existUser(string username, string telephone, string email)
+    public User existUser(string username, string telephone)
     {
         var users = _dbcontext
             .Users.FirstOrDefault(item => item.username == username ||
-                                          item.telephone == telephone ||
-                                          item.email == email);
+                                          item.telephone == telephone);
         return users;
     }
 }
