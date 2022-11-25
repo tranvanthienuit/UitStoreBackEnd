@@ -66,18 +66,51 @@ public class ProductFactory : IProductFactory
 
         List<Product> products = await result.ToListAsync();
 
-        products = productFilter.createDate == "ASC"
-            ? products.OrderBy(x => x.createDate).ToList()
-            : products.OrderByDescending(x => x.createDate).ToList();
-        products = productFilter.stock == "ASC"
-            ? products.OrderBy(x => x.stock).ToList()
-            : products.OrderByDescending(x => x.stock).ToList();
-        products = productFilter.discount == "ASC"
-            ? products.OrderBy(x => x.discount).ToList()
-            : products.OrderByDescending(x => x.discount).ToList();
-        products = productFilter.salePrice == "ASC"
-            ? products.OrderBy(x => x.salePrice).ToList()
-            : products.OrderByDescending(x => x.salePrice).ToList();
+        if (productFilter.createDate == "ASC")
+        {
+            products = products.OrderBy(x => x.createDate).ToList();
+        }
+        else
+        {
+            if (productFilter.createDate == "DESC")
+            {
+               products = products.OrderByDescending(x => x.createDate).ToList();
+            }
+        }
+        
+        if (productFilter.stock == "ASC")
+        {
+            products = products.OrderBy(x => x.stock).ToList();
+        }
+        else
+        {
+            if (productFilter.stock == "DESC")
+            {
+                products = products.OrderByDescending(x => x.stock).ToList();
+            }
+        }
+        if (productFilter.discount == "ASC")
+        {
+            products = products.OrderBy(x => x.discount).ToList();
+        }
+        else
+        {
+            if (productFilter.discount == "DESC")
+            {
+                products = products.OrderByDescending(x => x.discount).ToList();
+            }
+        }
+        if (productFilter.salePrice == "ASC")
+        {
+            products = products.OrderBy(x => x.salePrice).ToList();
+        }
+        else
+        {
+            if (productFilter.salePrice == "DESC")
+            {
+                products = products.OrderByDescending(x => x.salePrice).ToList();
+            }
+        }
         return products.Skip((page - 1) * size).Take(size).ToList();
     }
 }
