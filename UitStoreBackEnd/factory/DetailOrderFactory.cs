@@ -62,15 +62,12 @@ public class DetailOrderFactory : IDetailOrderFactory
     public async Task<List<DetailOrder>> getPage(DetailOrderFilter detailOrderFilter, string sort, int page, int size)
     {
         var result = from item in _dbcontext.DetailOrders
-            where detailOrderFilter.productId == null || (item.productId == detailOrderFilter.productId
-                                                          && detailOrderFilter.orderId == null) ||
-                  (item.orderId == detailOrderFilter.orderId
-                   && detailOrderFilter.name == null) || (item.name == detailOrderFilter.name
-                                                          && detailOrderFilter.price == null) ||
-                  (item.price == detailOrderFilter.price
-                   && detailOrderFilter.size == null) || (item.size == detailOrderFilter.size
-                                                          && detailOrderFilter.quantity == null) ||
-                  item.quantity == detailOrderFilter.quantity
+            where (detailOrderFilter.productId == null || item.productId == detailOrderFilter.productId)
+                  && (detailOrderFilter.orderId == null || item.orderId == detailOrderFilter.orderId)
+                  && (detailOrderFilter.name == null || item.name == detailOrderFilter.name)
+                  && (detailOrderFilter.price == null || item.price == detailOrderFilter.price)
+                  && (detailOrderFilter.size == null || item.size == detailOrderFilter.size)
+                  && (detailOrderFilter.quantity == null || item.quantity == detailOrderFilter.quantity)
             select item;
         List<DetailOrder> detailOrders = await result.ToListAsync();
         return detailOrders.Skip((page - 1) * size).Take(size)

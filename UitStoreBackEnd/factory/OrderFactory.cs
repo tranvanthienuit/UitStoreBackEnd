@@ -66,7 +66,7 @@ public class OrderFactory : IOrderFactory
     public async Task<List<Order>> getPage(OrderFilter orderFilter, string sort, int page, int size)
     {
         var result = from item in _dbcontext.Orders
-            where orderFilter.userId == null || item.userId == new Guid(orderFilter.userId)
+            where (orderFilter.userId == null || item.userId == new Guid(orderFilter.userId))
             select item;
         List<Order> orders = await result.ToListAsync();
         return orders.Skip((page - 1) * size).Take(size).ToList();

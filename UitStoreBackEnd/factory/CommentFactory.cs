@@ -69,9 +69,8 @@ public class CommentFactory : ICommentFactory
     public async Task<List<Comment>> getPage(CommentFilter commentFilter, string sort, int page, int size)
     {
         var result = from item in _dbcontext.Comments
-            where commentFilter.userId == null || (item.userId == new Guid(commentFilter.userId)
-                                                   && commentFilter.productId == null) ||
-                  item.productId == new Guid(commentFilter.productId)
+            where (commentFilter.userId == null || item.userId == new Guid(commentFilter.userId)) &&
+                  (commentFilter.productId == null || item.productId == new Guid(commentFilter.productId))
             select item;
         List<Comment> comments = await result.ToListAsync();
         return comments.Skip((page - 1) * size).Take(size).ToList();

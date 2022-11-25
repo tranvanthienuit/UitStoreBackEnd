@@ -24,13 +24,12 @@ builder.Services.AddScoped(typeof(IProductFactory), typeof(ProductFactory));
 builder.Services.AddScoped(typeof(IUserFactory), typeof(UserFactory));
 
 var app = builder.Build();
-app.UseHttpsRedirection();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
